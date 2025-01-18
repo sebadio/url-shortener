@@ -1,0 +1,19 @@
+{
+  "name": "url_shortener",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "^1.1.17"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/swagger": "^1.2.0",
+    "elysia": "^1.2.10"
+  },
+  "scripts": {
+    "dev": "bun --watch index.ts"
+  }
+}
