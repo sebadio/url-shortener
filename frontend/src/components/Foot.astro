@@ -1,0 +1,27 @@
+---
+import FooterLink from "./FooterLink.astro";
+---
+
+<footer class="bg-black p-4 text-pretty text-textColor min-h-[60px] text-center">
+  Made by
+  <FooterLink
+    link="https://github.com/sebadio"
+    hover="hover:text-[#c8b1c7]"
+    name="Sebastián Díaz Dopazo"
+  >
+    <img
+      src="https://avatars.githubusercontent.com/u/100494785"
+      alt="github sebadio profile photo"
+      class="inline-block size-6 rounded-full"
+    />
+  </FooterLink>
+  with:
+  <FooterLink link="https://elysiajs.com/" hover="hover:text-[#91cffb]" name="Elysia" />,
+  <FooterLink link="https://astro.build/" hover="hover:text-[#fe5d02]" name="Astro" />,
+  <FooterLink link="https://react.dev/" hover="hover:text-[#58c4dc]" name="React" />, and
+  <FooterLink
+    link="https://www.typescriptlang.org/"
+    hover="hover:text-[#3178c6]"
+    name="TypeScript"
+  />
+</footer>

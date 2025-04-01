@@ -1,0 +1,14 @@
+services:
+  backend:
+    container_name: url_shortener_backend
+    build: ./backend
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+  frontend:
+    container_name: url_shortener_frontend
+    build: ./frontend
+    ports:
+      - 4321:80
+    restart: unless-stopped
+    # TODO: Make persistence

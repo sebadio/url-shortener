@@ -1,16 +1,17 @@
 import crypto from "crypto";
+import { urlExists } from "@utils/db";
 
-export function createShortUrl(url: string): string {
-  const url_id = get_unique_id(url);
-  globalUrls.set(url_id, url);
-  return url_id;
-}
-
-function get_unique_id(url: string): string {
+export function createUniqueURL(original_url: string): string {
   const timestamp = Date.now();
-  return crypto
-    .createHash("sha256")
-    .update(url + timestamp)
-    .digest("hex")
-    .slice(0, 8);
+  let uniqueURL = null;
+
+  while (!uniqueURL || urlExists(uniqueURL)) {
+    uniqueURL = crypto
+      .createHash("sha256")
+      .update(original_url + timestamp)
+      .digest("hex")
+      .slice(0, 8);
+  }
+
+  return uniqueURL;
 }

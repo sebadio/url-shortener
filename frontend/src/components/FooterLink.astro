@@ -1,0 +1,13 @@
+---
+interface Props {
+  link: string;
+  hover: string;
+  name: string;
+}
+
+const { hover: color, link, name } = Astro.props;
+---
+
+<a href={link} target="_blank" class:list={["hover:underline", "transition-all", color]}
+  ><slot />{name}</a
+>

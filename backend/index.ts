@@ -1,51 +1,30 @@
-import { Elysia, redirect, t } from "elysia";
-import { swagger } from "@elysiajs/swagger";
+import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
-import crypto from "crypto";
+import { stats } from "handlers/stats";
+import { urlHandler } from "handlers/url";
+import { shorten } from "handlers/shorten";
+import logger from "@utils/logger";
 
-let globalUrls: Map<string, string> = new Map();
+const { PORT } = process.env;
 
 const app = new Elysia()
-  .use(swagger())
-  .use(cors())
+  .onError(({ code, error }) => {
+    logger.error({
+      code,
+      error,
+    });
+  })
+  .use(cors({ origin: "*", methods: ["GET", "POST", "DELETE"] }))
   .get("/", () => {
     return "Welcome to url shortening realm!";
   })
-  .post("/shorten", ({ query }) => {
-    if (!query.url) return { error: "Malformed" };
-
-    return {
-      error: false,
-      original_url: query.url,
-      short_url: addToUrl(query.url),
-    };
+  .get("/favicon.ico", ({ set }) => {
+    set.status = 204;
+    return { status: 204 };
   })
-  .get("/:url", ({ params }) => {
-    const url = getUrl(params.url);
-
-    if (!url || url === "") return "That url doesn't exist!";
-
-    return redirect(url, 302);
-  })
-  .listen(80, ({ port, hostname }) => {
-    console.log(`Listening on ${hostname}:${port}`);
+  .use(stats)
+  .use(urlHandler)
+  .use(shorten)
+  .listen(PORT || 8080, ({ port, hostname }) => {
+    logger.info(`Listening on ${hostname}:${port}`);
   });
-
-function addToUrl(url: string): string {
-  const url_id = get_unique_id(url);
-  globalUrls.set(url_id, url);
-  return url_id;
-}
-
-function get_unique_id(url: string): string {
-  const timestamp = Date.now();
-  return crypto
-    .createHash("sha256")
-    .update(url + timestamp)
-    .digest("hex")
-    .slice(0, 8);
-}
-
-function getUrl(shortened: string): string {
-  return globalUrls.get(shortened) || "";
-}
