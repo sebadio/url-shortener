@@ -1,5 +1,6 @@
 import { Database } from "bun:sqlite";
 import type { LinkBundle } from "@customTypes/LinkBundle";
+import logger from "./logger";
 const { BASENAME, PORT } = process.env;
 
 const cache: Map<string, LinkBundle> = new Map<string, LinkBundle>();
@@ -84,17 +85,18 @@ function getLinkBundle(shortened: string): LinkBundle | null {
 }
 
 export function getLinkStats(shortened: string): LinkBundle | null {
-  return getLinkBundle(shortened);
+  const dbLinks = getLinkBundle(shortened);
+  if (!dbLinks) return null;
+  if (!cache.has(dbLinks.short_url)) return dbLinks;
+  else return cache.get(dbLinks.short_url)!;
 }
 
 export function getLatestLinks(): LinkBundle[] {
-  const links = get_latest_links.all() as LinkBundle[];
-  links.forEach(
-    (l) =>
-      (l.short_url = `http://${BASENAME || "localhost"}:${PORT || 8080}/${
-        l.short_url
-      }`)
+  let links = get_latest_links.all() as LinkBundle[];
+  links = links.map((link) =>
+    cache.has(link.short_url) ? cache.get(link.short_url)! : link
   );
+
   return links;
 }
 

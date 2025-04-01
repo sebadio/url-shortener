@@ -1,8 +1,8 @@
 import type { ReturnedUrl } from "@customTypes/ReturnedUrl";
 
 export default function URL({ url }: { url: ReturnedUrl }) {
-  const { original_url, short_url } = url;
-  console.log(short_url);
+  let { original_url, short_url } = url;
+  short_url = `http://localhost:8080/${short_url}`;
   return (
     <>
       <div className="flex flex-col bg-primary/10 my-2 px-2 py-4 rounded">

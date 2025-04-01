@@ -3,7 +3,6 @@ import type { ReturnedUrl } from "@customTypes/ReturnedUrl";
 
 export default function RecentURL({ urls }: { urls: ReturnedUrl[] }) {
   if (urls.length === 0) return null;
-  console.log(urls);
   return (
     <section className="bg-primary/20 p-4 min-w-full md:min-w-[800px] rounded-lg">
       <h1>Recently created URLs</h1>
