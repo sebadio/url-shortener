@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import "../styles/global.css";
 
+import { useEffect, useState } from "react";
 import type { ReturnedUrl } from "@customTypes/ReturnedUrl";
 import RecentURL from "@components/RecentURL";
 import URLForm from "@components/URLForm";
