@@ -3,19 +3,22 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "^1.1.17"
+    "@types/bun": "^1.1.17",
+    "@elysiajs/swagger": "^1.2.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.2.0",
-    "@elysiajs/swagger": "^1.2.0",
     "elysia": "^1.2.10",
     "pino": "^9.6.0",
     "pino-pretty": "^13.0.0"
   },
   "scripts": {
-    "dev": "bun --watch index.ts"
+    "dev": "bun --watch src/index.ts",
+    "build": "bun build src/index.ts --outdir ./build --target bun --minify",
+    "start": "NODE_ENV=production bun src/index.ts",
+    "test": "bun test"
   }
 }

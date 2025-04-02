@@ -3,4 +3,6 @@ export type LinkBundle = {
   original_url: string;
   visits: number;
   last_visit: number;
+  updatedAt: string;
+  createdAt: string;
 };

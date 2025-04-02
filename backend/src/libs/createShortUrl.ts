@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { urlExists } from "@utils/db";
+import { urlExists } from "@libs/db";
 
 export function createUniqueURL(original_url: string): string {
   const timestamp = Date.now();

@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
-import { createUniqueURL } from "@utils/createShortUrl";
-import { insertToDatabase } from "@utils/db";
-import logger from "@utils/logger";
+import { createUniqueURL } from "@libs/createShortUrl";
+import { insertToDatabase } from "@libs/db";
+import logger from "@libs/logger";
 
 class InvalidURL extends Error {
   constructor(public message: string) {

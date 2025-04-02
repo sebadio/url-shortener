@@ -1,10 +1,16 @@
 import { Database } from "bun:sqlite";
 import type { LinkBundle } from "@customTypes/LinkBundle";
 import logger from "./logger";
-const { BASENAME, PORT } = process.env;
 
 const cache: Map<string, LinkBundle> = new Map<string, LinkBundle>();
-export const db = new Database("./db.sqlite");
+
+import fs from "fs";
+
+if (!fs.existsSync("./database")) {
+  fs.mkdirSync("./database");
+}
+
+export const db = new Database("./database/db.sqlite");
 
 /*
 Queries
@@ -16,6 +22,7 @@ db.query(
    "original_url"   TEXT NOT NULL, \
    "visits"         INTEGER DEFAULT 0,\
    "createdAt"      TEXT NOT NULL, \
+   "updatedAt"      TEXT NOT NULL, \
    PRIMARY KEY("short_url")\
   )'
 ).run();
@@ -27,7 +34,7 @@ const get_link_query = db.query(
 const get_all_links_query = db.query("SELECT * FROM links");
 
 const insert_link_query = db.query(
-  `INSERT INTO links VALUES($short_url, $original_url, $visits, $createdAt)`
+  `INSERT INTO links VALUES($short_url, $original_url, $visits, $createdAt, $updatedAt)`
 );
 
 const get_latest_links = db.query(
@@ -43,7 +50,7 @@ const update_cache_links_query = db.prepare(
 );
 
 const update_link = db.query(
-  "UPDATE links SET original_url = $newLink WHERE short_url = $short_url_id"
+  "UPDATE links SET original_url = $new_url, updatedAt = $updatedDate WHERE short_url = $short_url_id"
 );
 
 const url_exists = db.query(
@@ -61,12 +68,33 @@ export function insertToDatabase(
     $original_url: original_url,
     $visits: 0,
     $createdAt: creationDate,
+    $updatedAt: creationDate,
   }).lastInsertRowid;
   return id;
 }
 
-export function updateLink(short_url: string, new_url: string) {
-  update_link.run({ $short_url: short_url, $new_url: new_url });
+export function updateLink(
+  short_url: string,
+  new_url: string,
+  updatedDate: string
+) {
+  update_link.run({
+    $short_url_id: short_url,
+    $new_url: new_url,
+    $updatedDate: updatedDate,
+  });
+
+  if (cache.has(short_url)) {
+    const entry = cache.get(short_url);
+    cache.set(short_url, { ...entry!, original_url: new_url });
+  } else {
+    cache.set(short_url, {
+      ...getLinkBundle(short_url)!,
+      original_url: new_url,
+      updatedAt: updatedDate,
+      last_visit: Date.now(),
+    });
+  }
 }
 
 export function getAllLinks(): LinkBundle[] {
@@ -122,7 +150,8 @@ export function deleteUrl(shortened: string) {
 
 // Cache
 
-const tenMinutesTimer = 10 * 60 * 1000;
+const tenMinutes = 10 * 60 * 1000;
+const cachepdateTime = 5000;
 
 const updateLinks = db.transaction((links: LinkBundle[]) => {
   for (const link of links) {
@@ -139,13 +168,14 @@ setInterval(() => {
 
   cache.forEach((value: LinkBundle, key: string) => {
     const timeElapsed = Date.now() - value.last_visit;
-    if (timeElapsed > tenMinutesTimer) {
+    if (timeElapsed > tenMinutes) {
       linksToUpdate.push(value);
       cache.delete(key);
     }
   });
 
   if (linksToUpdate.length > 0) {
+    logger.info({}, `Updating ${linksToUpdate.length} links from cache`);
     updateLinks(linksToUpdate);
   }
-}, 5000);
+}, cachepdateTime);

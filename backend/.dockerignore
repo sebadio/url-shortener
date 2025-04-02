@@ -6,3 +6,11 @@ node_modules/*
 *.env
 .gitignore
 *.sqlite
+
+logs
+logs/
+logs/*
+
+database
+database/
+database/*

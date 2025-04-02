@@ -1,5 +1,5 @@
 import { Elysia, error, t } from "elysia";
-import { getAllLinks, getLatestLinks, getLinkStats } from "@utils/db";
+import { getAllLinks, getLatestLinks, getLinkStats } from "@libs/db";
 
 export const stats = new Elysia({ prefix: "/stats" })
   .get("/", () => error(400, "Bad Request"))

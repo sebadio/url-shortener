@@ -2,8 +2,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@customTypes/*": ["./types/*"],
-      "@utils/*": ["./utils/*"]
+      "@customTypes/*": ["./src/types/*"],
+      "@libs/*": ["./src/libs/*"],
+      "@controllers/*": ["src/controllers/*"]
     },
 
     // Enable latest features
