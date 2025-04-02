@@ -6,7 +6,9 @@ export const stats = new Elysia({ prefix: "/stats" })
   .get(
     "/:url",
     ({ params }) => {
-      return getLinkStats(params.url);
+      const data = getLinkStats(params.url);
+      if (data === null) return error(404, "Bad Request");
+      return data;
     },
     {
       params: t.Object({

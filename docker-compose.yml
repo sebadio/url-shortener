@@ -2,6 +2,9 @@ services:
   backend:
     container_name: url_shortener_backend
     build: ./backend
+    volumes:
+      - ./database:/app/database
+      - ./logs:/app/logs
     ports:
       - 8080:8080
     restart: unless-stopped
@@ -11,4 +14,3 @@ services:
     ports:
       - 4321:80
     restart: unless-stopped
-    # TODO: Make persistence

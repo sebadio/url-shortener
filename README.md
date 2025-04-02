@@ -16,15 +16,6 @@ This is the easiest and recommended way, you only have to run docker compose and
 docker compose up -d
 ```
 
-After this you can go to https://localhost:4321 and see the frontend, or you can use a CLI to interact with the backend directly like this:
-
-```bash
-# Create a short url
-curl -X POST -H "Content-Type: application/json" \
--d '{"original_url":"https://youtube.com"}' \
-localhost:8080/shorten
-```
-
 ```bash
 # Query the latest urls
 curl http://localhost:8080/stats/latest
@@ -47,4 +38,40 @@ bun install
 bun run dev
 ```
 
-This project was created using `bun init` in bun v1.1.45. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## How to use
+
+After runing the commands above, you can go to https://localhost:4321 and see the frontend, or you can use a CLI to interact with the backend directly like this:
+
+```bash
+# Create a short url
+curl -X POST -H "Content-Type: application/json" \
+-d '{"original_url":"https://youtube.com"}' \
+localhost:8080/shorten
+```
+
+```bash
+# Update a short url
+curl -X PUT -H "Content-Type: application/json" \
+-d '{"url":"https://google.com"}' \
+localhost:8080/:urlId
+```
+
+```bash
+# Delete a short url
+curl -X DELETE localhost:8080/:urlId
+```
+
+```bash
+# Get the latest 5 urls
+curl -X GET localhost:8080/stats/latest
+```
+
+```bash
+# Get the all links as an array
+curl -X GET localhost:8080/stats/allLinks
+```
+
+```bash
+# Get the stats of one url
+curl -X GET localhost:8080/stats/:urlId
+```

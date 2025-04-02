@@ -109,14 +109,11 @@ function getLinkBundle(shortened: string): LinkBundle | null {
     lkBundle = get_link_query.get({ $short_url: shortened }) as LinkBundle;
   }
 
-  return lkBundle;
+  return lkBundle || null;
 }
 
 export function getLinkStats(shortened: string): LinkBundle | null {
-  const dbLinks = getLinkBundle(shortened);
-  if (!dbLinks) return null;
-  if (!cache.has(dbLinks.short_url)) return dbLinks;
-  else return cache.get(dbLinks.short_url)!;
+  return getLinkBundle(shortened);
 }
 
 export function getLatestLinks(): LinkBundle[] {
