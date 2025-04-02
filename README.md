@@ -1,8 +1,23 @@
-# url_shortener
+# URL Shorneter
 
-A simple url shortener service made with Bun and Elysia.js
+A simple url shortener service, both backend and frontend, the idea was taken from: [roadmap.sh](https://roadmap.sh/projects/url-shortening-service)
 
-I worked on this thanks to the idea in [roadmap.sh](https://roadmap.sh/projects/url-shortening-service)
+## Tech Stack
+
+### Backend
+- [Bun](https://bun.sh/)
+- [ElysiaJS](https://elysiajs.com/)
+- [SQLite](https://www.sqlite.org/index.html)
+- [Pino](https://getpino.io/)
+- TypeScript
+- Docker
+
+### Frontend
+- [Astro](https://astro.build/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [React](https://react.dev/)
+
+When building with the Dockerfile, this gets hosted locally with nginx
 
 ## How to run
 
